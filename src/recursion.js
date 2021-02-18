@@ -51,17 +51,61 @@ var arraySum = function(array) {
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  if (n === 1 ) {
+    return false
+  }
+  if (n === 0 ) {
+    return true
+  }
+  return isEven(Math.abs(n) - 2)
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+
+  if (n === 0) {
+    return 0
+  }
+
+  if ( n > 0 ) {
+    return n - 1 + sumBelow(n - 1)
+  }
+
+  if ( n < 0 ) {
+    return n + 1 + sumBelow(n + 1)
+  }
+
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  var results = [];
+
+    if (x === y) {
+      return results
+      }
+
+    if ( x > y  ) {
+      if (x - 1 === y) {
+        return results
+      }
+      results.push(x - 1)
+      return results.concat(range(x - 1, y))
+      // return results
+    }
+
+    if (y > x) {
+      if (x + 1 === y) {
+        return results
+      }
+      results.push(x + 1);
+      return results.concat(range(x + 1, y))
+      // return results
+    }
+
 };
 
 // 7. Compute the exponent of a number.
@@ -70,6 +114,19 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+  if (exp === 0) {
+    return 1
+  }
+
+  if (exp < 0) {
+    return 1 / base * exponent(base, exp + 1).toFixed(4)
+  }
+
+  if ( exp > 0 && isEven(exp) ) {
+    return exponent(base, exp / 2) * exponent(base, exp / 2)
+  }
+
+  return base * exponent(base, exp - 1)
 };
 
 // 8. Determine if a number is a power of two.
@@ -77,14 +134,56 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+  //base case
+  if (n === 1 ) {
+    return true
+  }
+
+  if ( n < 1 ) {
+   return false
+  }
+
+  return powerOfTwo(n / 2)
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+if (string) {
+  var reversed = '';
+  if (string.length > 0) {
+    reversed += string.charAt(string.length - 1);
+    return reversed += reverse(string.slice(0, -1));
+  }
+}
+
+if (string === '') {
+  return ''
+}
+
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+  var isPalindrome = true
+  //base case
+  // if (string === reverse(string)) {
+  //   isPalindrome = true;
+  // }
+  if (string.length === 1 || string === '') {
+    return true
+  }
+
+  var lowered = string.toLowerCase()
+  string.split(' ').join('')
+
+  if (lowered[0] === lowered[lowered.length - 1]) {
+    isPalindrome = palindrome(lowered.split('').slice(1, -1).join(''))
+
+  } else {
+    isPalindrome = false
+  }
+
+  return isPalindrome
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -166,11 +265,35 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
+  var count = 0;
+
+  for (var item in obj) {
+    if (obj[item] === value) {
+      count++
+    }
+    if (typeof obj[item] === 'object' ) {
+      count += countValuesInObj(obj[item], value)
+    }
+  }
+
+  return count;
+
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
+  for (var item in obj) {
+    if (item === oldKey) {
+      obj[newKey] = obj[item]
+      delete obj[item]
+    }
+
+    if (typeof obj[item] === 'object') {
+      replaceKeysInObj(obj[item], oldKey, newKey)
+    }
+  }
+  return obj
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
